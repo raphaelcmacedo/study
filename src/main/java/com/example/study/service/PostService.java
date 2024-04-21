@@ -25,6 +25,16 @@ public class PostService {
         return postRepository.save(post);
     }
 
+    public Post save(Post post, Long id) throws PostNotFoundException {
+        return postRepository.findById(id)
+                .map(p -> {
+                     p.setSubject(post.getSubject());
+                     p.setText(post.getText());
+                     return this.save(p);
+                })
+               .orElseThrow(() -> new PostNotFoundException(String.format("Post with id %s not found", id)));
+    }
+
     public void delete(Long id){
         postRepository.deleteById(id);
     }

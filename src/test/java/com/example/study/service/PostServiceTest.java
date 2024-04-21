@@ -1,6 +1,8 @@
 package com.example.study.service;
 
+import com.example.study.PostNotFoundException;
 import com.example.study.entity.Post;
+import com.example.study.factory.PostFactory;
 import com.example.study.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,25 +27,17 @@ public class PostServiceTest {
 
     @InjectMocks
     PostService postService;
-
     @Mock
     PostRepository postRepository;
-
     @BeforeEach
     public void init() {
         MockitoAnnotations.openMocks(this);
     }
 
-    private static Post buildAnyPost() {
-        return Post.builder()
-               .subject("subject")
-               .text("text")
-               .build();
-    }
 
     @Test
     void listAllReturnList() throws Exception {
-        Post post = buildAnyPost();
+        Post post = PostFactory.buildAnyPost();
         List<Post> expected = List.of(post);
 
         given(postRepository.findAll()).willReturn(expected);
@@ -59,7 +53,7 @@ public class PostServiceTest {
 
     @Test
     void findByIdReturnsPost() throws Exception {
-        Post expected = buildAnyPost();
+        Post expected = PostFactory.buildAnyPost();
         Long id = 1L;
 
         given(postRepository.findById(any(Long.class))).willReturn(Optional.ofNullable(expected));
@@ -71,8 +65,18 @@ public class PostServiceTest {
     }
 
     @Test
-    void saveReturnsPost() throws Exception {
-        Post expected = buildAnyPost();
+    void findByIdThrowsWhenNotExist() throws Exception {
+        Post expected = PostFactory.buildAnyPost();
+        Long id = 1L;
+
+        given(postRepository.findById(any(Long.class))).willReturn(Optional.empty());
+
+        assertThrows(PostNotFoundException.class, () -> postService.findById(id));
+    }
+
+    @Test
+    void createReturnsPost() throws Exception {
+        Post expected = PostFactory.buildAnyPost();
 
         given(postRepository.save(expected)).willReturn(expected);
 
