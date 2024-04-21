@@ -1,7 +1,8 @@
 package com.example.study.service;
 
-import com.example.study.PostNotFoundException;
 import com.example.study.entity.Post;
+import com.example.study.exception.PostNotFoundException;
+import com.example.study.exception.SubjectAlreadyExistsException;
 import com.example.study.factory.PostFactory;
 import com.example.study.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.mockito.Mockito.times;
@@ -60,7 +61,7 @@ public class PostServiceTest {
         Post expected = PostFactory.buildAnyPost();
         Long id = 1L;
 
-        given(postRepository.findById(any(Long.class))).willReturn(Optional.ofNullable(expected));
+        given(postRepository.findById(anyLong())).willReturn(Optional.ofNullable(expected));
 
         Post result = postService.findById(id);
 
@@ -73,7 +74,7 @@ public class PostServiceTest {
         Post expected = PostFactory.buildAnyPost();
         Long id = 1L;
 
-        given(postRepository.findById(any(Long.class))).willReturn(Optional.empty());
+        given(postRepository.findById(anyLong())).willReturn(Optional.empty());
 
         assertThrows(PostNotFoundException.class, () -> postService.findById(id));
     }
@@ -82,22 +83,37 @@ public class PostServiceTest {
     void createReturnsPost() throws Exception {
         Post expected = PostFactory.buildAnyPost();
 
-        given(postRepository.save(expected)).willReturn(expected);
+        given(postRepository.save(any(Post.class))).willReturn(expected);
+        given(postRepository.findBySubject(anyString()))
+                .willReturn(Optional.empty());
 
         Post result = postService.save(expected);
 
         assertEquals(expected, result);
         verify(postRepository, times(1)).save(any(Post.class));
+        verify(postRepository, times(1)).findBySubject(anyString());
+    }
+
+    @Test
+    void createThrowsIfSubjectExists() throws Exception {
+        Post expected = PostFactory.buildAnyPost();
+
+        given(postRepository.findBySubject(anyString())).willReturn(Optional.of(expected));
+
+        assertThrows(SubjectAlreadyExistsException.class, () -> postService.save(expected));
+
+        verify(postRepository, times(0)).save(any(Post.class));
+        verify(postRepository, times(1)).findBySubject(anyString());
     }
 
     @Test
     void deleteReturnsOk() throws Exception {
         Long id = 1L;
-        willDoNothing().given(postRepository).deleteById(any(Long.class));
+        willDoNothing().given(postRepository).deleteById(anyLong());
 
         postService.delete(id);
 
-        verify(postRepository, times(1)).deleteById(any(Long.class));
+        verify(postRepository, times(1)).deleteById(anyLong());
     }
 
 

@@ -49,6 +49,18 @@ public class PostRepositoryTest {
         assertFalse(result.isPresent());
     }
 
+    @Test
+    void findBySubjectAndIdNotReturnsPostIfNotSamePost() throws Exception {
+        Optional<Post> result = postRepository.findBySubjectAndIdNot(post.getSubject(), 0L);
+        assertTrue(result.isPresent());
+    }
+
+    @Test
+    void findBySubjectAndIdNotReturnsEmptyIfSamePost() throws Exception {
+        Optional<Post> result = postRepository.findBySubjectAndIdNot(post.getSubject(), post.getId());
+        assertFalse(result.isPresent());
+    }
+
 
 
 }

@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Optional<Post> findBySubject(String subject);
+    Optional<Post> findBySubjectAndIdNot(String subject, Long id);
 }

@@ -1,6 +1,7 @@
 package com.example.study.controller;
 
-import com.example.study.PostNotFoundException;
+import com.example.study.exception.PostNotFoundException;
+import com.example.study.exception.SubjectAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
@@ -22,6 +23,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity<String> handlePostNotFoundException(PostNotFoundException e) {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(SubjectAlreadyExistsException.class)
+    public ResponseEntity<String> handleSubjectAlreadyExistsException(SubjectAlreadyExistsException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ConstraintViolationException.class)

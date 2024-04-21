@@ -1,7 +1,8 @@
 package com.example.study.controller;
 
-import com.example.study.PostNotFoundException;
 import com.example.study.entity.Post;
+import com.example.study.exception.PostNotFoundException;
+import com.example.study.exception.SubjectAlreadyExistsException;
 import com.example.study.factory.PostFactory;
 import com.example.study.model.PostDTO;
 import com.example.study.model.PostRequest;
@@ -21,6 +22,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -62,7 +64,7 @@ public class PostControllerTest {
         Post post = PostFactory.buildAnyPost();
         post.setId(1L);
 
-        given(postService.findById(post.getId())).willReturn(post);
+        given(postService.findById(anyLong())).willReturn(post);
 
         mockMvc.perform(get("/post/{id}", post.getId()))
                 .andExpect(status().isOk())
@@ -72,7 +74,8 @@ public class PostControllerTest {
     @Test
     void findThrows404WhenIdNotExists() throws Exception {
         Long id = 1L;
-        given(postService.findById(id)).willThrow(new PostNotFoundException(String.format("Post with id %s not found", id)));
+        given(postService.findById(anyLong()))
+                .willThrow(new PostNotFoundException(String.format("Post with id %s not found", id)));
 
         mockMvc.perform(get("/post/{id}", id))
                 .andExpect(status().isNotFound())   ;
@@ -84,12 +87,22 @@ public class PostControllerTest {
         PostRequest request = PostFactory.buildNewPostRequest();
         String json = mapper.writeValueAsString(request);
 
-        given(postService.save(post)).willReturn(post);
+        given(postService.save(any(Post.class))).willReturn(post);
 
         mockMvc.perform(post("/post").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.subject", is(post.getSubject())));
     }
+    @Test
+    void createThrows409WhenSubjectExists() throws Exception {
+        PostRequest request = PostFactory.buildNewPostRequest();
+        String json = mapper.writeValueAsString(request);
+        given(postService.save(any(Post.class))).willThrow(new SubjectAlreadyExistsException(""));
+
+        mockMvc.perform(post("/post").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isConflict());
+    }
+
 
     @Test
     void updateReturnsPostWhenIdExists() throws Exception {
@@ -98,7 +111,7 @@ public class PostControllerTest {
         PostRequest request = PostFactory.buildNewPostRequest();
         String json = mapper.writeValueAsString(request);
 
-        given(postService.save(post, id)).willReturn(post);
+        given(postService.save(any(Post.class), anyLong())).willReturn(post);
 
         mockMvc.perform(put("/post/{id}", id).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -112,7 +125,8 @@ public class PostControllerTest {
         PostRequest request = PostFactory.buildNewPostRequest();
         String json = mapper.writeValueAsString(request);
 
-        given(postService.save(post, id)).willThrow(new PostNotFoundException(String.format("Post with id %s not found", id)));
+        given(postService.save(any(Post.class), anyLong()))
+                .willThrow(new PostNotFoundException(String.format("Post with id %s not found", id)));
 
         mockMvc.perform(put("/post/{id}", id).content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())   ;
@@ -122,7 +136,7 @@ public class PostControllerTest {
     void deleteReturnsOk() throws Exception {
         Long id = 1L;
 
-        willDoNothing().given(postService).delete(id);
+        willDoNothing().given(postService).delete(anyLong());
 
         mockMvc.perform(delete("/post/{id}", id)).andExpect(status().isOk());
     }
