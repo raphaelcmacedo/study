@@ -11,13 +11,16 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -39,16 +42,19 @@ public class PostControllerTest {
     void listAllReturnList() throws Exception {
         Post post = PostFactory.buildAnyPost();
         List<Post> posts = List.of(post);
+        Page<Post> page = new PageImpl<>(posts);
 
         PostDTO postDTO = PostFactory.buildAnyDTO();
         List<PostDTO> postsDTO = List.of(postDTO);
 
-        given(postService.listAll()).willReturn(posts);
+        given(postService.listAll(any(Pageable.class))).willReturn(page);
 
         mockMvc.perform(get("/post"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$", hasSize(1)))
-                .andExpect(jsonPath("$[0].subject", is(post.getSubject())));
+                .andExpect(jsonPath("$.totalPages").value(1))
+                .andExpect(jsonPath("$.totalElements").value(1))
+                .andExpect(jsonPath("$.content[0].subject", is(post.getSubject())))
+                .andExpect(jsonPath("$.content[0].text", is(post.getText())));
     }
 
     @Test

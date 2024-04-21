@@ -7,12 +7,12 @@ import com.example.study.service.PostService;
 import com.example.study.util.MapperUtil;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Collection;
-import java.util.List;
 
 @RestController
 @RequestMapping("/post")
@@ -24,9 +24,11 @@ public class PostController {
     private final MapperUtil mapperUtil = new MapperUtil();
 
     @GetMapping
-    public ResponseEntity<Collection<PostDTO>> listAll(){
-        List<Post> result = postService.listAll();
-        List<PostDTO> resultDTO = mapperUtil.mapList(result, PostDTO.class);
+    public ResponseEntity<Page<PostDTO>> listAll(@RequestParam(defaultValue = "0") int page,
+                                                       @RequestParam(defaultValue = "20") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Post> result = postService.listAll(pageable);
+        Page<PostDTO> resultDTO = mapperUtil.mapPage(result, PostDTO.class);
 
         return ResponseEntity.ok(resultDTO);
     }

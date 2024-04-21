@@ -11,6 +11,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,17 +41,18 @@ public class PostServiceTest {
     @Test
     void listAllReturnList() throws Exception {
         Post post = PostFactory.buildAnyPost();
-        List<Post> expected = List.of(post);
+        List<Post> posts = List.of(post);
+        Page<Post> expected = new PageImpl<>(posts);
+        Pageable pageable = Pageable.ofSize(20);
 
-        given(postRepository.findAll()).willReturn(expected);
+        given(postRepository.findAll(any(Pageable.class))).willReturn(expected);
 
-        List<Post> result = postService.listAll();
+        Page<Post> result = postService.listAll(pageable);
 
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        assertEquals(1, result.size());
 
-        verify(postRepository, times(1)).findAll();
+        verify(postRepository, times(1)).findAll(any(Pageable.class));
     }
 
     @Test
