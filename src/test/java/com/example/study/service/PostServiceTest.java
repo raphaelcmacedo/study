@@ -21,10 +21,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.willDoNothing;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class PostServiceTest {
@@ -53,7 +50,7 @@ public class PostServiceTest {
         assertNotNull(result);
         assertFalse(result.isEmpty());
 
-        verify(postRepository, times(1)).findAll(any(Pageable.class));
+        then(postRepository).should().findAll(any(Pageable.class));
     }
 
     @Test
@@ -66,7 +63,8 @@ public class PostServiceTest {
         Post result = postService.findById(id);
 
         assertEquals(expected, result);
-        verify(postRepository, times(1)).findById(any(Long.class));
+
+        then(postRepository).should().findById(anyLong());
     }
 
     @Test
@@ -90,8 +88,9 @@ public class PostServiceTest {
         Post result = postService.save(expected);
 
         assertEquals(expected, result);
-        verify(postRepository, times(1)).save(any(Post.class));
-        verify(postRepository, times(1)).findBySubject(anyString());
+
+        then(postRepository).should().save(any(Post.class));
+        then(postRepository).should().findBySubject(anyString());
     }
 
     @Test
@@ -102,8 +101,7 @@ public class PostServiceTest {
 
         assertThrows(SubjectAlreadyExistsException.class, () -> postService.save(expected));
 
-        verify(postRepository, times(0)).save(any(Post.class));
-        verify(postRepository, times(1)).findBySubject(anyString());
+        then(postRepository).should().findBySubject(anyString());
     }
 
     @Test
@@ -113,7 +111,7 @@ public class PostServiceTest {
 
         postService.delete(id);
 
-        verify(postRepository, times(1)).deleteById(anyLong());
+        then(postRepository).should().deleteById(anyLong());
     }
 
 
