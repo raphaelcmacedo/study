@@ -20,12 +20,14 @@ import java.util.stream.Collectors;
 public class ControllerExceptionHandler {
 
     @ExceptionHandler(PostNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ResponseEntity<String> handlePostNotFoundException(PostNotFoundException e) {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(SubjectAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ResponseEntity<String> handleSubjectAlreadyExistsException(SubjectAlreadyExistsException e) {
         log.error(e.getMessage(), e);
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);

@@ -28,6 +28,7 @@ Welcome to **Study**! This is a personal project I've been working on to study a
 - **PostgreSQL**: For database management.
 - **Docker**: For containerization.
 - **Spring docker compose**: For docker compose integration.
+- **Testcontainer**: For integration and database testing, bringing the test environment closer to production.
 - **Keycloak**: For user management.
 - **Elastic Stack**: For observability.
 

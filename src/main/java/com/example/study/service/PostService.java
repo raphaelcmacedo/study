@@ -8,10 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service
+@Transactional
 public class PostService {
 
     @Autowired
@@ -24,6 +26,7 @@ public class PostService {
         return postRepository.findById(id)
                 .orElseThrow(() -> new PostNotFoundException(String.format("Post with id %s not found", id)));
     }
+
     public Post save(Post post) throws SubjectAlreadyExistsException {
         validate(post);
         return postRepository.save(post);
@@ -32,8 +35,7 @@ public class PostService {
     public Post save(Post post, Long id) throws PostNotFoundException, SubjectAlreadyExistsException {
             Post saved = postRepository.findById(id)
                     .orElseThrow(() -> new PostNotFoundException(String.format("Post with id %s not found", id)));
-            saved.setSubject(post.getSubject());
-            saved.setText(post.getText());
+            saved = new Post(saved.getId(), post.getSubject(), post.getText());
 
             return save(saved);
     }
