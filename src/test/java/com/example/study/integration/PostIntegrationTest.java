@@ -31,6 +31,7 @@ public class PostIntegrationTest {
     @Container
     @ServiceConnection
     static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16.0");
+
     @Autowired
     private TestRestTemplate restTemplate;
     @Autowired
