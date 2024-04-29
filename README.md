@@ -36,11 +36,14 @@ Welcome to **Study**! This is a personal project I've been working on to study a
 
 - Once the application is running, it will be available at `http://localhost:8080`.
 - You can try the endpoints using the Swagger UI in the url: `http://localhost:8080/swagger-ui/index.html`.
+- The endpoint `http://localhost:8080/private` is authenticated. The authentication will be handled by Keycloak in the helm "Study".
+- The endpoint `http://localhost:8080/post` and the Swagger UI still public (no authentication is required).
 
 ## Configuration
 
 - Modify the application properties in `src/main/resources/application.properties` or the `docker-compose.yml`.
 - You can also create environment-specific configuration files (e.g., `application-dev.properties`, `application-prod.properties`) for different deployment environments.
+- Docker will import automatically the helm "Study" used in Keycloak. In case the import is not successful, the import file can be found in the Keycloak folder.
 
 ## Contributing
 
