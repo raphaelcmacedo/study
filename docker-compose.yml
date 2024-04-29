@@ -13,6 +13,13 @@ services:
   keycloak:
     container_name: keycloak
     image: quay.io/keycloak:latest
+    command:
+      - "-b"
+      - "0.0.0.0"
+      - "-Dkeycloak.migration.action=import"
+      - "-Dkeycloak.migration.provider=dir"
+      - "-Dkeycloak.migration.dir=/config/"
+      - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -24,8 +31,6 @@ services:
       DB_PASSWORD: pass
     ports:
       - "9090:8080"
-    command:
-      - "start-dev"
     depends_on:
       - "database"
 
