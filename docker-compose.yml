@@ -12,14 +12,9 @@ services:
 
   keycloak:
     container_name: keycloak
-    image: quay.io/keycloak:latest
+    image: keycloak/keycloak:latest
     command:
-      - "-b"
-      - "0.0.0.0"
-      - "-Dkeycloak.migration.action=import"
-      - "-Dkeycloak.migration.provider=dir"
-      - "-Dkeycloak.migration.dir=/config/"
-      - "-Dkeycloak.migration.strategy=IGNORE_EXISTING"
+      - "start-dev"
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
@@ -34,8 +29,21 @@ services:
     depends_on:
       - "database"
 
-  #study:
+  #backend:
   #  build: .
   #  ports:
   #    - "8080:8080"
-  #  depends_on: ["database"]
+  #  depends_on:
+  #    - "database"
+
+  study-ui:
+    image: study-ui
+    container_name: study-ui
+    build:
+      context: ./study-ui
+    ports:
+      - "4200:80"
+  #  depends_on:
+  #    - "backend"
+
+

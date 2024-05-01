@@ -1,0 +1,38 @@
+<h1>Posts</h1>
+<div *ngIf="loading">Loading...</div>
+<div *ngIf="error">{{ error }}</div>
+
+<table *ngIf="posts" class="data-grid">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Subject</th>
+      <th>Text</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let post of posts.content">
+      <td>{{ post.id }}</td>
+      <td>{{ post.subject }}</td>
+      <td>{{ post.text }}</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="pagination" *ngIf="posts">
+  <button
+    *ngIf="posts.number > 0"
+    (click)="loadPreviousPage()"
+    class="pagination-button"
+  >
+    Previous
+  </button>
+  <span>Page {{ posts.number + 1 }} of {{ posts.totalPages }}</span>
+  <button
+    *ngIf="!posts.last"
+    (click)="loadNextPage()"
+    class="pagination-button"
+  >
+    Next
+  </button>
+</div>
