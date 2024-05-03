@@ -8,6 +8,8 @@ import { Router } from '@angular/router';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing,module';
 import { HttpClientModule } from '@angular/common/http';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MaterialModule } from './material.module';
 
 
 @NgModule({
@@ -17,11 +19,15 @@ import { HttpClientModule } from '@angular/common/http';
     FormsModule,  
     AppRoutingModule,
     HttpClientModule,
+    MaterialModule,
   ],
   declarations: [
     AppComponent,
   ],
-  bootstrap: [ AppComponent ]
+  bootstrap: [ AppComponent ],
+  providers: [
+    provideAnimationsAsync()
+  ]
 })
 export class AppModule {
   

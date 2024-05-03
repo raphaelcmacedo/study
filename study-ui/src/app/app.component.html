@@ -1,8 +1,12 @@
 <div class="wrapper">
-  <h1 class="title">Study UI</h1>
-  <nav>
-    <a routerLink="/post" routerLinkActive="active" ariaCurrentWhenActive="page">Post</a>
-  </nav>
+
+  <mat-toolbar color="primary">
+     <span>Study UI</span> 
+     <div class="spacer"></div> 
+     <a mat-button routerLink="/post" routerLinkActive="active">Post</a>
+  </mat-toolbar>
+
+  
   <div>
     <router-outlet></router-outlet>
   </div>

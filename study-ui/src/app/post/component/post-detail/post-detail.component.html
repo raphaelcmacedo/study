@@ -1,1 +1,34 @@
-<p>post-detail works!</p>
+<form [formGroup]="form" (ngSubmit)="onSubmit()">
+
+    <mat-form-field appearance="fill">
+        <mat-label>Subject</mat-label>
+        <input matInput formControlName="subject" required/>
+        <mat-error *ngIf="form.get('subject')?.invalid && form.get('subject')?.touched">
+            Subject is required.
+        </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+        <mat-label>Text</mat-label>
+        <input matInput formControlName="text" required/>
+        <mat-error *ngIf="form.get('text')?.invalid && form.get('text')?.touched">
+            Text is required.
+        </mat-error>
+    </mat-form-field>
+
+    @if (error) {
+        <div class="error-messages">
+            <mat-error>{{error}}</mat-error>
+        </div>        
+    }
+
+    <div class="dialog-actions">
+        <button mat-raised-button color="primary" type="submit">Submit</button>
+        <span class="spacer"></span>
+        <button mat-raised-button color="warn" (click)="onClose()">Cancel</button>
+    </div>
+    
+    
+</form>
+    
+

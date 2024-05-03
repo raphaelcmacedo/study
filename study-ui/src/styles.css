@@ -1,63 +1,49 @@
-/* General styles */
+html,
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
-  
-  /* Data grid styles */
-  .data-grid {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  .data-grid th,
-  .data-grid td {
-    padding: 8px 12px;
-    border: 1px solid #ccc;
-    text-align: left;
-  }
-  
-  .data-grid th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-  }
-  
-  .data-grid tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .data-grid tr:hover {
-    background-color: #e6f7ff;
-  }
-  
-  /* Pagination styles */
-  .pagination {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-  }
-  
-  .pagination span {
-    margin: 0 10px;
-  }
-  
-  .pagination-button {
-    padding: 8px 12px;
-    border: none;
-    background-color: #007bff;
-    color: white;
-    cursor: pointer;
-    border-radius: 4px;
-  }
-  
-  .pagination-button:hover {
-    background-color: #0056b3;
-  }
-  
-  .pagination-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-  }
-  
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+table {
+  margin-bottom: 50px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin: 50px;
+}
+
+.spacer {
+  margin-left: 50px;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.page-title-container {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+}
+
+.page-title-card {
+  width: 80%;
+  padding: 16px;
+}
+
+.add-button-container {
+  display: flex;
+  justify-content: flex-end; 
+  margin-bottom: 30px; 
+}
