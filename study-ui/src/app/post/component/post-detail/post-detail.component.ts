@@ -1,15 +1,30 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostService } from '../../service/PostService';
 import { PostRequest } from '../../model/PostRequest';
 import { Observable } from 'rxjs';
 import { Post } from '../../model/Post';
+import { MatButton } from '@angular/material/button';
+import { NgIf } from '@angular/common';
+import { MatInput } from '@angular/material/input';
+import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
 
 @Component({
-  selector: 'app-post-detail',
-  templateUrl: './post-detail.component.html',
-  styleUrl: './post-detail.component.css',
+    selector: 'app-post-detail',
+    templateUrl: './post-detail.component.html',
+    styleUrl: './post-detail.component.css',
+    standalone: true,
+    imports: [
+        FormsModule,
+        ReactiveFormsModule,
+        MatFormField,
+        MatLabel,
+        MatInput,
+        NgIf,
+        MatError,
+        MatButton,
+    ],
 })
 export class PostDetailComponent implements OnInit {
   form: FormGroup;

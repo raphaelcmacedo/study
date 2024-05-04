@@ -6,11 +6,14 @@
       </mat-card-title>
     </mat-card-header>
 
-    @if (loading || error) {
+    @if (loading) {
     <div class="spinner-container">
-      <mat-spinner *ngIf="loading"></mat-spinner>
-      <div *ngIf="error">{{ error }}</div>
+      <mat-spinner></mat-spinner>
     </div>
+   }@else if (error) {
+    <div class="error-messages">
+      {{error}}
+    </div>        
     }@else{
     <div class="add-button-container">
       <button

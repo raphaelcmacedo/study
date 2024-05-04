@@ -2,15 +2,40 @@ import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { PostService } from '../../service/PostService';
 import { Post } from '../../model/Post';
 import { Page } from '../../model/Page';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatTableDataSource, MatTable, MatColumnDef, MatHeaderCellDef, MatHeaderCell, MatCellDef, MatCell, MatHeaderRowDef, MatHeaderRow, MatRowDef, MatRow } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
 import { PostDetailComponent } from '../post-detail/post-detail.component';
+import { MatIcon } from '@angular/material/icon';
+import { MatFabButton, MatIconButton } from '@angular/material/button';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
+import { NgIf } from '@angular/common';
+import { MatCard, MatCardHeader, MatCardTitle } from '@angular/material/card';
 
 @Component({
-  selector: 'app-post-list',
-  templateUrl: './post-list.component.html',
-  styleUrl: './post-list.component.css',
+    selector: 'app-post-list',
+    templateUrl: './post-list.component.html',
+    styleUrl: './post-list.component.css',
+    standalone: true,
+    imports: [
+        MatCard,
+        MatCardHeader,
+        MatCardTitle,
+        NgIf,
+        MatProgressSpinner,
+        MatFabButton,
+        MatIcon,
+        MatTable,
+        MatColumnDef,
+        MatHeaderCellDef,
+        MatHeaderCell,
+        MatCellDef,
+        MatCell,
+        MatIconButton,
+        MatHeaderRowDef,
+        MatHeaderRow,
+        MatRowDef,
+        MatRow,
+    ],
 })
 export class PostListComponent implements OnInit {
   posts: Page<Post> | null = null;
@@ -20,7 +45,6 @@ export class PostListComponent implements OnInit {
   error: string | null = null;
   currentPage = 0;
   pageSize = 1000;
-
 
   constructor(private postService: PostService, private dialog: MatDialog) {}
 
@@ -35,13 +59,19 @@ export class PostListComponent implements OnInit {
     this.postService.getPosts(this.currentPage, this.pageSize).subscribe({
       next: (response) => {
         this.loading = false;
+        this.error = null;
         this.posts = response;
         this.dataSource = new MatTableDataSource<Post>(response.content);
         this.currentPage = response.pageable.pageNumber;
       },
       error: (err) => {
         this.loading = false;
-        this.error = 'Failed to load posts. Please try again later.';
+        if(typeof err.error === 'string'){
+          this.error = `Failed to load posts. ${err.error}`;
+        }else{
+          this.error = 'Failed to load posts. Try again later.';
+        }
+        
       },
     });
   }
