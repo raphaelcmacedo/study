@@ -3,17 +3,21 @@
     <mat-form-field appearance="fill">
         <mat-label>Subject</mat-label>
         <input matInput formControlName="subject" required/>
-        <mat-error *ngIf="form.get('subject')?.invalid && form.get('subject')?.touched">
-            Subject is required.
-        </mat-error>
+        @if(form.get('subject')?.invalid && form.get('subject')?.touched){
+            <mat-error>
+                Subject is required.
+            </mat-error>
+        } 
     </mat-form-field>
 
     <mat-form-field appearance="fill">
         <mat-label>Text</mat-label>
         <input matInput formControlName="text" required/>
-        <mat-error *ngIf="form.get('text')?.invalid && form.get('text')?.touched">
-            Text is required.
-        </mat-error>
+        @if(form.get('text')?.invalid && form.get('text')?.touched){
+            <mat-error>
+                Text is required.
+            </mat-error>
+        }
     </mat-form-field>
 
     @if (error) {
