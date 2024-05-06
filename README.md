@@ -29,6 +29,7 @@ Welcome to **Study**! This is a personal project I've been working on to study a
 - **Docker**: For containerization.
 - **Spring docker compose**: For docker compose integration.
 - **Testcontainer**: For integration and database testing, bringing the test environment closer to production.
+- **Cypress**: For E2E and frontend components testing.
 - **Keycloak**: For user management.
 - **Elastic Stack**: For observability.
 
@@ -38,6 +39,7 @@ Welcome to **Study**! This is a personal project I've been working on to study a
 - You can try the endpoints using the Swagger UI in the url: `http://localhost:8080/swagger-ui/index.html`.
 - The endpoint `http://localhost:8080/private` is authenticated. The authentication will be handled by Keycloak in the helm "Study".
 - The endpoint `http://localhost:8080/post` and the Swagger UI still public (no authentication is required).
+- In order to execute the Cypress' automated tests execute the command: `npx cypress open`
 
 ## Configuration
 
