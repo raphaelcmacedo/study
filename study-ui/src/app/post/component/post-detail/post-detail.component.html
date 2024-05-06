@@ -2,17 +2,17 @@
 
     <mat-form-field appearance="fill">
         <mat-label>Subject</mat-label>
-        <input matInput formControlName="subject" required/>
+        <input matInput formControlName="subject" data-cy="subject" required/>
         @if(form.get('subject')?.invalid && form.get('subject')?.touched){
             <mat-error>
                 Subject is required.
             </mat-error>
-        } 
+        }    
     </mat-form-field>
 
     <mat-form-field appearance="fill">
         <mat-label>Text</mat-label>
-        <input matInput formControlName="text" required/>
+        <input matInput formControlName="text" data-cy="text" required/>
         @if(form.get('text')?.invalid && form.get('text')?.touched){
             <mat-error>
                 Text is required.
@@ -27,9 +27,9 @@
     }
 
     <div class="dialog-actions">
-        <button mat-raised-button color="primary" type="submit">Submit</button>
+        <button mat-raised-button color="primary" data-cy="btn-submit" type="submit">Submit</button>
         <span class="spacer"></span>
-        <button mat-raised-button color="warn" (click)="onClose()">Cancel</button>
+        <button mat-raised-button color="warn" data-cy="btn-cancel" (click)="onClose()">Cancel</button>
     </div>
     
     

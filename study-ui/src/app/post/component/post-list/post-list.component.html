@@ -18,6 +18,7 @@
     <div class="add-button-container">
       <button
         mat-fab
+        data-cy="btn-new"
         color="primary"
         (click)="openDetailDialog(null)"
         aria-label="Add new post"
@@ -34,12 +35,12 @@
 
       <ng-container matColumnDef="subject">
         <th mat-header-cell *matHeaderCellDef>Subject</th>
-        <td mat-cell *matCellDef="let element">{{ element.subject }}</td>
+        <td mat-cell *matCellDef="let element" data-cy="subject">{{ element.subject }}</td>
       </ng-container>
 
       <ng-container matColumnDef="text">
         <th mat-header-cell *matHeaderCellDef>Text</th>
-        <td mat-cell *matCellDef="let element">{{ element.text }}</td>
+        <td mat-cell *matCellDef="let element" data-cy="text">{{ element.text }}</td>
       </ng-container>
 
       <!-- Action column -->
@@ -47,10 +48,10 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
 
         <td mat-cell *matCellDef="let element">
-          <button mat-icon-button (click)="editPost(element)">
+          <button mat-icon-button data-cy="btn-edit" (click)="editPost(element)">
             <mat-icon>edit</mat-icon>
           </button>
-          <button mat-icon-button (click)="deletePost(element)">
+          <button mat-icon-button data-cy="btn-delete" (click)="deletePost(element)">
             <mat-icon>delete</mat-icon>
           </button>
         </td>
