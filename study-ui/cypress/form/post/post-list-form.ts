@@ -13,6 +13,10 @@ export class PostListForm{
         this.elements.subjectRow().contains(value).should('exist');
     }
 
+    notContainsRowWithSubject(value: string){
+        this.elements.subjectRow().contains(value).should('not.exist');
+    }
+
     containsRowWithText(value: string){
         this.elements.textRow().contains(value).should('exist');
     }
