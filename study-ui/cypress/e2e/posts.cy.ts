@@ -5,10 +5,15 @@ const listForm = new PostListForm();
 const detailForm = new DetailForm();    
 
 describe('Post crud operations', ()=>{
+    before(()=>{
+        cy.cleanup();
+    })
+    
     beforeEach(()=>{
         cy.visit('/');
         cy.get('[data-cy="btn-post"] > .mdc-button__label').click();
     })
+    
     
     it('save new post', ()=>{
         const post = {

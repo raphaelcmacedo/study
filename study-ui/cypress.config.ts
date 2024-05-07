@@ -1,5 +1,8 @@
 import { defineConfig } from "cypress";
 
+const pgp = require('pg-promise');
+const { db } = require('./cypress/support/db.ts');
+
 export default defineConfig({
   component: {
     devServer: {
@@ -11,7 +14,16 @@ export default defineConfig({
 
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
+      on('task', {
+
+        clearDB(){
+          const query = 'Delete from Post';
+          db.none(query);
+
+          return null;
+        }
+        
+      })
     },
     baseUrl:'http://localhost:4200'
   },
