@@ -13,8 +13,7 @@ describe('Post crud operations', ()=>{
         cy.visit('/');
         cy.get('[data-cy="btn-post"] > .mdc-button__label').click();
     })
-    
-    
+
     it('save new post', ()=>{
         const post = {
             subject: new Date().valueOf().toString(),
@@ -75,7 +74,27 @@ describe('Post crud operations', ()=>{
         detailForm.clickCancel();
     
         listForm.notContainsRowWithSubject(post.subject);
+    })
+
+    it('cannot save posts with duplicated subject', ()=>{
+        const post = {
+            subject: 'Duplicated',
+            text: 'Created from cypress',
+        }
         
+        //Save first time
+        listForm.clickNew();
+        detailForm.typeSubject(post.subject);
+        detailForm.typeText(post.text);
+        detailForm.clickSubmit();
+        
+        //Try to save second time
+        listForm.clickNew();
+        detailForm.typeSubject(post.subject);
+        detailForm.typeText(post.text);
+        detailForm.clickSubmit();
+
+        detailForm.containsFormError(`Error while saving the post. Subject ${post.subject} already exists`)
         
     })
     

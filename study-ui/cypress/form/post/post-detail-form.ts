@@ -6,6 +6,7 @@ export class DetailForm{
         btnCancel: () => cy.get('[data-cy="btn-cancel"]'),
         errSubject: () => cy.get('[data-cy="err-subject"]'),
         errText: () => cy.get('[data-cy="err-text"]'),
+        errForm: () => cy.get('[data-cy="err-form"]'),
     }
 
     typeSubject(value: string){
@@ -50,5 +51,9 @@ export class DetailForm{
     
     containsTextError(){
         this.elements.errText().contains('Text is required.').should('exist');
+    }
+
+    containsFormError(value: string){
+        this.elements.errForm().contains(value).should('exist');
     }
 }
