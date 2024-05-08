@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { PostService } from '../../service/PostService';
 import { Post } from '../../model/Post';
 import { Page } from '../../model/Page';
@@ -46,7 +46,8 @@ export class PostListComponent implements OnInit {
   currentPage = 0;
   pageSize = 1000;
 
-  constructor(private postService: PostService, private dialog: MatDialog) {}
+  postService = inject(PostService);
+  dialog = inject(MatDialog)
 
   ngOnInit(): void {
     this.getPosts();

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, inject } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostService } from '../../service/PostService';
@@ -27,29 +27,25 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
     ],
 })
 export class PostDetailComponent implements OnInit {
-  form: FormGroup;
   id: string | null = null;
   error: string | null = null;
 
-  constructor(
-    private postService: PostService,
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<PostDetailComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { id: string | null }
-  ) {
+  postService = inject(PostService);
+  fb = inject(FormBuilder);
+  dialogRef = inject(MatDialogRef<PostDetailComponent>);
+
+  form = this.fb.nonNullable.group({
+    subject: ['', Validators.required],
+    text: ['', Validators.required],
+  });
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: { id: string | null }) {
     this.id = data.id;
-    this.error = null;
-
-    this.form = this.fb.group({
-      subject: ['', Validators.required],
-      text: ['', Validators.required],
-    });
-
-    this.loadPost();
   }
 
   ngOnInit(): void {
-    
+    this.error = null;
+    this.loadPost();
   }
 
   private loadPost(){
@@ -70,7 +66,7 @@ export class PostDetailComponent implements OnInit {
   }
 
   onSubmit() {
-    const postRequest:PostRequest = this.form.value;
+    const postRequest:PostRequest = this.form.getRawValue();
     let result:Observable<Post>;
     if(this.id){//Update
       result = this.postService.updatePost(postRequest, this.id);
