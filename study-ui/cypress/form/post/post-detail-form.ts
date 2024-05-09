@@ -45,6 +45,10 @@ export class DetailForm{
         this.elements.btnSubmit().should('be.disabled');
     }
 
+    submitIsEnabled(){
+        this.elements.btnSubmit().should('be.enabled');
+    }
+
     containsSubjectError(){
         this.elements.errSubject().contains('Subject is required.').should('exist');
     }

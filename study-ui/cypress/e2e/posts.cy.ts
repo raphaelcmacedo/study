@@ -58,7 +58,6 @@ describe('Post crud operations', ()=>{
     
         listForm.clickNew();
         detailForm.submitIsDisabled();
-        
     })
 
     it('cancel just close the window without saving it', ()=>{
