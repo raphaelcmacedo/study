@@ -66,12 +66,14 @@ test.describe('Post crud operations', () => {
       text: 'Created from cypress',
     };
 
+    //Save first attempt
     await postListForm.clickNew();
-
     await postDetailForm.typeSubject(post.subject);
     await postDetailForm.typeText(post.text);
     await postDetailForm.clickSubmit();
-
+    
+    //Save second attempt
+    await postListForm.clickNew();
     await postDetailForm.typeSubject(post.subject);
     await postDetailForm.typeText(post.text);
     await postDetailForm.clickSubmit();

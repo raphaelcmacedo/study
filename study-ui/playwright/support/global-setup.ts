@@ -1,7 +1,7 @@
 import { type FullConfig } from '@playwright/test';
 
 const pgp = require('pg-promise');
-const { db } = require('././support/db.ts');
+const { db } = require('../../support/db');
 
 async function globalSetup(config: FullConfig) {
     const query = 'Delete from Post';
