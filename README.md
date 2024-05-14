@@ -29,7 +29,7 @@ Welcome to **Study**! This is a personal project I've been working on to study a
 - **Docker**: For containerization.
 - **Spring docker compose**: For docker compose integration.
 - **Testcontainer**: For integration and database testing, bringing the test environment closer to production.
-- **Cypress**: For E2E and frontend components testing.
+- **Cypress and Playwright**: For E2E and frontend components testing. Using both tools, simply to create a comparison between them.
 - **Keycloak**: For user management.
 - **Elastic Stack**: For observability.
 
@@ -40,6 +40,7 @@ Welcome to **Study**! This is a personal project I've been working on to study a
 - The endpoint `http://localhost:8080/private` is authenticated. The authentication will be handled by Keycloak in the helm "Study".
 - The endpoint `http://localhost:8080/post` and the Swagger UI still public (no authentication is required).
 - In order to execute the Cypress' automated tests execute the command: `npx cypress open`
+- In order to execute the Playwright automated tests execute the command: `npx playwright test -- ui`
 
 ## Configuration
 
