@@ -1,0 +1,73 @@
+openapi: 3.0.3
+info:
+  title: Study API Specification for message operations
+  description: |-
+    A simple banking API that allows two operations:
+    - get account balance given account number
+    - deposit amount to a account
+  version: 1.0-SNAPSHOT
+servers:
+  - url: http://localhost:8080
+tags:
+  - name: messages
+    description: Message operations
+
+paths:
+  /message/{id}:
+    get:
+      tags:
+        - messages
+      summary: Get message
+      description: Get message information by id
+      operationId: findById
+      parameters:
+        - in: path
+          name: 'id'
+          schema:
+            type: integer
+          required: true
+          description: Numeric ID of the user to get
+      responses:
+        200:
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        404:
+          description: Message not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageNotFoundError'
+
+components:
+  schemas:
+
+    Message:
+      type: object
+      properties:
+        id:
+          type: number
+        from:
+          type: string
+        to:
+          type: string
+        content:
+          type: string
+
+    MessageNotFoundError:
+      type: object
+      properties:
+        message:
+          type: string
+
+    DepositRequest:
+      type: object
+      properties:
+        from:
+          type: string
+        to:
+          type: string
+        content:
+          type: string
