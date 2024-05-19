@@ -1,5 +1,6 @@
 package com.example.study.controller;
 
+import com.example.study.exception.MessageNotFoundException;
 import com.example.study.exception.PostNotFoundException;
 import com.example.study.exception.SubjectAlreadyExistsException;
 import jakarta.validation.ConstraintViolationException;
@@ -46,6 +47,13 @@ public class ControllerExceptionHandler {
         log.error(e.getMessage(), e);
         List<String> errors = e.getBindingResult().getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.toList());
         return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(MessageNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ResponseEntity<String> handleMessageNotFoundException(MessageNotFoundException e) {
+        log.error(e.getMessage(), e);
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
     }
 
 }
