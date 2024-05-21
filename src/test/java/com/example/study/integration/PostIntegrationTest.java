@@ -20,8 +20,6 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.util.List;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 @Testcontainers
@@ -40,7 +38,7 @@ public class PostIntegrationTest {
     private Long id = 1L;
 
     @BeforeEach
-    void setup() throws Exception {
+    void setup(){
         postRepository.deleteAll();
 
         Post post = Post.builder().subject("Hello").text("World").build();
@@ -56,21 +54,20 @@ public class PostIntegrationTest {
     }
 
     @Test
-    void findByIdReturnsPostWithValidId() throws Exception {
-        List<Post> posts = postRepository.findAll();
+    void findByIdReturnsPostWhenValidId(){
         ResponseEntity<PostDTO> response = restTemplate.exchange("/post/" + id, HttpMethod.GET, null, PostDTO.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
     }
 
     @Test
-    void findByIdReturns404WhenNotExist() throws Exception {
+    void findByIdReturns404WhenNotExist(){
         ResponseEntity<String> response = restTemplate.exchange("/post/1000", HttpMethod.GET, null, String.class);
         assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
     }
 
     @Test
-    void createValidPost() throws Exception {
+    void createValidPost(){
         PostRequest post = PostFactory.buildNewPostRequest();
         HttpEntity<PostRequest> httpEntity = new HttpEntity<>(post);
 
@@ -81,7 +78,7 @@ public class PostIntegrationTest {
         assertEquals(post.getText(), response.getBody().getText());
     }
     @Test
-    void createPostWithDuplicatedSubjectReturns409() throws Exception {
+    void createPostWithDuplicatedSubjectReturns409(){
         PostRequest post = PostRequest.builder().subject("Hello").text("World").build();
         HttpEntity<PostRequest> httpEntity = new HttpEntity<>(post);
 
@@ -90,7 +87,7 @@ public class PostIntegrationTest {
     }
 
     @Test
-    void updateReturnPostWhenValid() throws Exception {
+    void updateReturnPostWhenValid(){
         PostRequest post = PostFactory.buildNewPostRequest();
         HttpEntity<PostRequest> httpEntity = new HttpEntity<>(post);
 
@@ -103,9 +100,7 @@ public class PostIntegrationTest {
     }
 
     @Test
-    void updateReturn409WhenSubjectIsAlreadyUsed() throws Exception {
-        List<Post> posts = postRepository.findAll();
-
+    void updateReturn409WhenSubjectIsAlreadyUsed(){
         //Create a new post
         PostRequest postRequest = PostFactory.buildNewPostRequest();
         HttpEntity<PostRequest> httpEntity = new HttpEntity<>(postRequest);
@@ -121,7 +116,7 @@ public class PostIntegrationTest {
         assertEquals(HttpStatus.CONFLICT, updateResponse.getStatusCode());
     }
     @Test
-    void updateReturnPostWhenOnlyTheTextIsChange() throws Exception {
+    void updateReturnPostWhenOnlyTheTextIsChange(){
         PostRequest post = PostRequest.builder().subject("Hello").text("World!!!").build();
         HttpEntity<PostRequest> httpEntity = new HttpEntity<>(post);
 
@@ -134,9 +129,7 @@ public class PostIntegrationTest {
     }
 
     @Test
-    void deleteRemovesPost() throws Exception {
-        List<Post> posts = postRepository.findAll();
-
+    void deleteRemovesPost(){
         ResponseEntity<Void> response = restTemplate.exchange("/post/" + id, HttpMethod.DELETE, null, Void.class);
         assertEquals(HttpStatus.OK, response.getStatusCode());
 
