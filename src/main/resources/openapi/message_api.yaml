@@ -40,6 +40,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MessageNotFoundError'
+  /message:
+    post:
+      tags:
+        - messages
+      summary: Save message
+      description: Create a new message
+      operationId: save
+      requestBody:
+        description: From, to and message content
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessageRequest'
+        required: true
+      responses:
+        204:
+          description: Success
+        404:
+          description: Message not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageNotFoundError'
 
 components:
   schemas:
@@ -62,7 +85,7 @@ components:
         message:
           type: string
 
-    DepositRequest:
+    MessageRequest:
       type: object
       properties:
         from:
@@ -71,3 +94,7 @@ components:
           type: string
         content:
           type: string
+      required:
+        - from
+        - to
+        - content

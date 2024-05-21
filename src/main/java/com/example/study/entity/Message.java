@@ -19,9 +19,9 @@ public class Message {
     @Id
     @GeneratedValue
     private Long id;
-    @Column(nullable = false)
+    @Column(name= "sender", nullable = false)
     private String from;
-    @Column(nullable = false)
+    @Column(name= "recipient", nullable = false)
     private String to;
     @Column(nullable = false)
     private String content;

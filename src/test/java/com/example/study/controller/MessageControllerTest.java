@@ -8,16 +8,20 @@ import com.example.study.factory.MessageFactory;
 import com.example.study.service.MessageService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
+import org.openapitools.model.MessageRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
+import org.springframework.http.MediaType;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientManager;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = MessageController.class, excludeAutoConfiguration = OAuth2AuthorizedClientManager.class)
@@ -51,6 +55,30 @@ public class MessageControllerTest {
 
         mockMvc.perform(get("/message/{id}", id))
                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void saveReturns204WithValidRequest() throws Exception {
+        Message message = MessageFactory.buildAnyMessage();
+        MessageRequest request = MessageFactory.buildAnyRequest();
+        String json = mapper.writeValueAsString(request);
+
+        given(messageService.save(any(Message.class))).willReturn(message);
+
+        mockMvc.perform(post("/message").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void saveThrows400WhenRequestIsInvalid() throws Exception {
+        Message message = MessageFactory.buildAnyMessage();
+        MessageRequest request = new MessageRequest();
+        String json = mapper.writeValueAsString(request);
+
+        given(messageService.save(any(Message.class))).willReturn(message);
+
+        mockMvc.perform(post("/message").content(json).contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
     }
 
 }
