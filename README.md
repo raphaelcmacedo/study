@@ -31,7 +31,7 @@ Welcome to **Study**! This is a personal project I've been working on to study a
 - **Testcontainer**: For integration and database testing, bringing the test environment closer to production.
 - **Cypress and Playwright**: For E2E and frontend components testing. Using both tools, simply to create a comparison between them.
 - **Keycloak**: For user management.
-- **Elastic Stack**: For observability.
+- **Kafka**: Messaging. The application contains a very simple kafka implement to produce and consume messages.
 
 ## Usage
 
