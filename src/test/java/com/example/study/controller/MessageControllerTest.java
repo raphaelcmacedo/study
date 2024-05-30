@@ -20,6 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -59,11 +60,10 @@ public class MessageControllerTest {
 
     @Test
     void saveReturns204WithValidRequest() throws Exception {
-        Message message = MessageFactory.buildAnyMessage();
         MessageRequest request = MessageFactory.buildAnyRequest();
         String json = mapper.writeValueAsString(request);
 
-        given(messageService.save(any(Message.class))).willReturn(message);
+        willDoNothing().given(messageService).save(any(Message.class));
 
         mockMvc.perform(post("/message").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNoContent());
@@ -71,11 +71,10 @@ public class MessageControllerTest {
 
     @Test
     void saveThrows400WhenRequestIsInvalid() throws Exception {
-        Message message = MessageFactory.buildAnyMessage();
         MessageRequest request = new MessageRequest();
         String json = mapper.writeValueAsString(request);
 
-        given(messageService.save(any(Message.class))).willReturn(message);
+        willDoNothing().given(messageService).save(any(Message.class));
 
         mockMvc.perform(post("/message").content(json).contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());

@@ -4,6 +4,7 @@ import com.example.study.entity.Message;
 import com.example.study.exception.MessageNotFoundException;
 import com.example.study.factory.MessageFactory;
 import com.example.study.repository.MessageRepository;
+import com.example.study.service.messaging.MessageProducer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.BDDMockito.then;
+import static org.mockito.BDDMockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class MessageServiceTest {
@@ -28,11 +28,12 @@ public class MessageServiceTest {
     MessageService messageService;
     @Mock
     MessageRepository messageRepository;
+    @Mock
+    private MessageProducer messageProducer;
     @BeforeEach
     public void init() {
         MockitoAnnotations.openMocks(this);
     }
-
 
     @Test
     void findByIdReturnsMessage(){
@@ -58,14 +59,12 @@ public class MessageServiceTest {
 
     @Test
     void createReturnsMessage(){
-        Message expected = MessageFactory.buildAnyMessage();
+        Message message = MessageFactory.buildAnyMessage();
+        willDoNothing().given(messageProducer).sendMessage(any(Message.class));
 
-        given(messageRepository.save(any(Message.class))).willReturn(expected);
+        messageService.save(message);
 
-        Message result = messageService.save(expected);
-
-        assertEquals(expected, result);
-        then(messageRepository).should().save(any(Message.class));
+        then(messageProducer).should().sendMessage(any(Message.class));
     }
 
 }
