@@ -1,5 +1,5 @@
-import { Component, OnInit, Inject, inject } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { Component, OnInit, Inject, inject, signal } from '@angular/core';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { PostService } from '../../service/PostService';
 import { PostRequest } from '../../model/PostRequest';
@@ -27,9 +27,11 @@ import { MatFormField, MatLabel, MatError } from '@angular/material/form-field';
     ],
 })
 export class PostDetailComponent implements OnInit {
-  id: string | null = null;
-  error: string | null = null;
+  //Signals
+  id = signal<string | null>(null);
+  error = signal<string | null>(null);
 
+  //Injected
   postService = inject(PostService);
   fb = inject(FormBuilder);
   dialogRef = inject(MatDialogRef<PostDetailComponent>);
@@ -40,26 +42,26 @@ export class PostDetailComponent implements OnInit {
   });
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: { id: string | null }) {
-    this.id = data.id;
+    this.id.set(data.id);
   }
 
   ngOnInit(): void {
-    this.error = null;
+    this.error.set(null);
     this.loadPost();
   }
 
   private loadPost(){
-    if(this.id){
-      this.postService.getPost(this.id).subscribe({
+    if(this.id()){
+      this.postService.getPost(this.id()??0).subscribe({
         next:(response) =>{
-          this.error = null;
+          this.error.set(null);
           this.form.patchValue({
             subject: response.subject,
             text: response.text
           });  
         },
         error:(err) =>{
-          this.error = `Error while loading the post. ${err.error}`;
+          this.error.set(`Error while loading the post. ${err.error}`);
         }
       });
     }
@@ -68,19 +70,19 @@ export class PostDetailComponent implements OnInit {
   onSubmit() {
     const postRequest:PostRequest = this.form.getRawValue();
     let result:Observable<Post>;
-    if(this.id){//Update
-      result = this.postService.updatePost(postRequest, this.id);
+    if(this.id()){//Update
+      result = this.postService.updatePost(postRequest, this.id()??0);
     }else{//Create
       result = this.postService.addPost(postRequest);
     }
 
     result.subscribe({
       next:(response) =>{
-        this.error = null;
+        this.error.set(null);
         this.dialogRef.close(response);
       },
       error:(err)=> {
-        this.error = `Error while saving the post. ${err.error}`;
+        this.error.set(`Error while saving the post. ${err.error}`);
       }
     });
   }

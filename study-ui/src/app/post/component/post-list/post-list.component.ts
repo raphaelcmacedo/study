@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { PostService } from '../../service/PostService';
 import { Post } from '../../model/Post';
 import { Page } from '../../model/Page';
@@ -10,6 +10,7 @@ import { MatFabButton, MatIconButton } from '@angular/material/button';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { NgIf } from '@angular/common';
 import { MatCard, MatCardHeader, MatCardTitle } from '@angular/material/card';
+import { single } from 'rxjs';
 
 @Component({
     selector: 'app-post-list',
@@ -38,14 +39,18 @@ import { MatCard, MatCardHeader, MatCardTitle } from '@angular/material/card';
     ],
 })
 export class PostListComponent implements OnInit {
-  posts: Page<Post> | null = null;
-  dataSource = new MatTableDataSource<Post>();
+  //Signals
+  posts = signal<Page<Post> | null>(null);
+  dataSource = signal(new MatTableDataSource<Post>());
+  loading = signal(false);
+  error = signal<string | null>(null);
+  
+  //Material datagrid
   displayedColumns: string[] = ['id', 'subject', 'text', 'actions'];
-  loading = false;
-  error: string | null = null;
-  currentPage = 0;
-  pageSize = 1000;
+  currentPage = signal(0);
+  pageSize = signal(1000);
 
+  //Injected
   postService = inject(PostService);
   dialog = inject(MatDialog)
 
@@ -54,25 +59,24 @@ export class PostListComponent implements OnInit {
   }
 
   private getPosts(): void {
-    this.loading = true;
-    this.error = null;
+    this.loading.set(true);
+    this.error.set(null);
 
-    this.postService.getPosts(this.currentPage, this.pageSize).subscribe({
+    this.postService.getPosts(this.currentPage(), this.pageSize()).subscribe({
       next: (response) => {
-        this.loading = false;
-        this.error = null;
-        this.posts = response;
-        this.dataSource = new MatTableDataSource<Post>(response.content);
-        this.currentPage = response.pageable.pageNumber;
+        this.loading.set(false);
+        this.error.set(null);
+        this.posts.set(response);
+        this.dataSource.set(new MatTableDataSource<Post>(response.content));
+        this.currentPage.set(response.pageable.pageNumber);
       },
       error: (err) => {
-        this.loading = false;
+        this.loading.set(false);
         if(typeof err.error === 'string'){
-          this.error = `Failed to load posts. ${err.error}`;
+          this.error.set(`Failed to load posts. ${err.error}`);
         }else{
-          this.error = 'Failed to load posts. Try again later.';
-        }
-        
+          this.error.set('Failed to load posts. Try again later.');
+        } 
       },
     });
   }
@@ -103,7 +107,7 @@ export class PostListComponent implements OnInit {
         this.getPosts();
       },
       error:(err) =>{
-        this.error = "Failed to delete post";
+        this.error.set('Failed to delete post');
       }
     });
   }
